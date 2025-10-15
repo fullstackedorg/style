@@ -1,7 +1,6 @@
 import CSS from "csstype";
 
 const style = document.createElement("style");
-document.head.append(style);
 
 const propertiesDefaultingToPx = {
     padding: true,
@@ -75,4 +74,8 @@ function createStyle(tag: string, cssProperties: CSSProperties) {
 export function createClass(name: string, cssProperties: CSSProperties) {
     createStyle("." + name, cssProperties);
     return name;
+}
+
+export function exportStyles() {
+    return style.innerHTML;
 }
