@@ -25,9 +25,15 @@ const propertiesDefaultingToPx: { [property in keyof CSS.Properties]: true } = {
     left: true,
 
     gap: true,
+
+    fontSize: true,
 } as const;
 
 const propertiesDefaultingToPxArr = Object.keys(propertiesDefaultingToPx);
+const allCSSProperties = [];
+for (const property in document.body.style) {
+    allCSSProperties.push(property);
+}
 
 type CSSProperties =
     | CSS.Properties
@@ -35,9 +41,12 @@ type CSSProperties =
           [property in keyof typeof propertiesDefaultingToPx]:
               | number
               | CSS.Properties[property];
+      }
+    | {
+          [child: string]: CSSProperties;
       };
 
-export function createClass(name: string, cssProperties: CSSProperties) {
+function createStyle(tag: string, cssProperties: CSSProperties) {
     const tempElement = document.createElement("div");
 
     Object.entries(cssProperties).forEach(([property, value]) => {
@@ -47,6 +56,12 @@ export function createClass(name: string, cssProperties: CSSProperties) {
             typeof value === "number"
         ) {
             value = value + "px";
+        } else if (!allCSSProperties.includes(property)) {
+            const nestedTag = property.startsWith(":")
+                ? `${tag}${property}`
+                : `${tag} ${property}`;
+
+            return createStyle(nestedTag, value);
         }
 
         tempElement.style[property] = value;
@@ -55,7 +70,10 @@ export function createClass(name: string, cssProperties: CSSProperties) {
     const cssString = tempElement.style.cssText;
     tempElement.remove();
 
-    style.innerText += `.${name}{${cssString}}`;
+    style.innerText += `${tag}{${cssString}}`;
+}
 
+export function createClass(name: string, cssProperties: CSSProperties) {
+    createStyle("." + name, cssProperties);
     return name;
 }
