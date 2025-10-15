@@ -3,7 +3,7 @@ import CSS from "csstype";
 const style = document.createElement("style");
 document.head.append(style);
 
-const propertiesDefaultingToPx: { [property in keyof CSS.Properties]: true } = {
+const propertiesDefaultingToPx = {
     padding: true,
     paddingTop: true,
     paddingRight: true,
@@ -36,11 +36,10 @@ for (const property in document.body.style) {
 }
 
 type CSSProperties =
-    | CSS.Properties
     | {
-          [property in keyof typeof propertiesDefaultingToPx]:
-              | number
-              | CSS.Properties[property];
+          [property in keyof CSS.Properties]: property extends keyof typeof propertiesDefaultingToPx
+              ? number | CSS.Properties[property]
+              : CSS.Properties[property];
       }
     | {
           [child: string]: CSSProperties;
