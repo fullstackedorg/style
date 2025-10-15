@@ -7,7 +7,7 @@ const redClass = createClass("red", {
     color: "white",
     fontFamily: "sans-serif",
     padding: 5,
-    width: 200,
+    width: 200
 });
 
 const div = document.createElement("div");

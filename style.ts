@@ -1,5 +1,4 @@
 import CSS from "csstype";
-import { partial } from "zod/v4/core/util";
 
 const style = document.createElement("style");
 document.head.append(style);
@@ -25,7 +24,7 @@ const propertiesDefaultingToPx: { [property in keyof CSS.Properties]: true } = {
     bottom: true,
     left: true,
 
-    gap: true
+    gap: true,
 } as const;
 
 const propertiesDefaultingToPxArr = Object.keys(propertiesDefaultingToPx);
@@ -33,15 +32,21 @@ const propertiesDefaultingToPxArr = Object.keys(propertiesDefaultingToPx);
 type CSSProperties =
     | CSS.Properties
     | {
-          [property in keyof typeof propertiesDefaultingToPx]: number | CSS.Properties[property];
+          [property in keyof typeof propertiesDefaultingToPx]:
+              | number
+              | CSS.Properties[property];
       };
 
 export function createClass(name: string, cssProperties: CSSProperties) {
     const tempElement = document.createElement("div");
 
     Object.entries(cssProperties).forEach(([property, value]) => {
-        if(propertiesDefaultingToPxArr.includes(property) && value && typeof value === "number") {
-            value = value + "px"
+        if (
+            propertiesDefaultingToPxArr.includes(property) &&
+            value &&
+            typeof value === "number"
+        ) {
+            value = value + "px";
         }
 
         tempElement.style[property] = value;
