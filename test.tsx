@@ -1,6 +1,7 @@
 import React from "react";
 import { createClass } from "./runtime";
 import { createRoot } from "react-dom/client";
+import { Button } from "./test-button";
 
 export const redClassDef: Parameters<typeof createClass> = [
     "red",
@@ -10,13 +11,12 @@ export const redClassDef: Parameters<typeof createClass> = [
         fontFamily: "sans-serif",
         padding: 5,
         width: 200,
-        cursor: "pointer",
-        ":hover": {
+        "&:hover": {
             backgroundColor: "blue",
         },
         span: {
             textDecoration: "underline",
-            ":hover": {
+            "&:hover": {
                 fontWeight: "bold",
             },
         },
@@ -26,7 +26,14 @@ export const redClassDef: Parameters<typeof createClass> = [
 export function run() {
     const div = document.createElement("div");
     div.innerHTML = `<span>Hello World</span>`;
-    document.body.append(div);
+    const button = Button({
+        text: "Click Me",
+        large: true,
+    });
+    button.onclick = () => {
+        div.innerText = "You clicked the button.";
+    };
+    document.body.append(div, button);
 
     const redClass = createClass(...redClassDef);
 

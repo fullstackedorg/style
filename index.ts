@@ -1,10 +1,12 @@
 import { createClass, exportStyles } from "./build";
 import { redClassDef, run } from "./test";
 import fs from "fs";
+import { buttonClassDef } from "./test-button";
 
 document.title = "Fullstacked Style";
 
 createClass(...redClassDef);
+createClass(...buttonClassDef);
 
 await fs.mkdir("data");
 await fs.writeFile("data/index.css", exportStyles());

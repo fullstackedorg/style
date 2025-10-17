@@ -1,7 +1,5 @@
 import CSS from "csstype";
 
-const style = document.createElement("style");
-
 const propertiesDefaultingToPx = {
     padding: true,
     paddingTop: true,
@@ -26,6 +24,7 @@ const propertiesDefaultingToPx = {
     gap: true,
 
     fontSize: true,
+    borderRadius: true,
 } as const;
 
 const propertiesDefaultingToPxArr = Object.keys(propertiesDefaultingToPx);
@@ -44,6 +43,8 @@ type CSSProperties =
           [child: string]: CSSProperties;
       };
 
+const styles: [string, string][] = [];
+
 function createStyle(tag: string, cssProperties: CSSProperties) {
     const tempElement = document.createElement("div");
 
@@ -55,8 +56,8 @@ function createStyle(tag: string, cssProperties: CSSProperties) {
         ) {
             value = value + "px";
         } else if (!allCSSProperties.includes(property)) {
-            const nestedTag = property.startsWith(":")
-                ? `${tag}${property}`
+            const nestedTag = property.startsWith("&")
+                ? `${tag}${property.slice(1)}`
                 : `${tag} ${property}`;
 
             return createStyle(nestedTag, value);
@@ -68,7 +69,7 @@ function createStyle(tag: string, cssProperties: CSSProperties) {
     const cssString = tempElement.style.cssText;
     tempElement.remove();
 
-    style.innerText += `${tag}{${cssString}}`;
+    styles.push([tag, cssString]);
 }
 
 export function createClass(name: string, cssProperties: CSSProperties) {
@@ -77,5 +78,8 @@ export function createClass(name: string, cssProperties: CSSProperties) {
 }
 
 export function exportStyles() {
-    return style.innerHTML;
+    return styles
+        .toReversed()
+        .map(([tag, cssString]) => `${tag}{${cssString}}`)
+        .join(" ");
 }
