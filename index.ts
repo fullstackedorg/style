@@ -1,12 +1,10 @@
-import { createClass, exportStyles } from "./build";
-import { redClassDef, run } from "./test";
 import fs from "fs";
-import { buttonClassDef } from "./test-button";
+import { exportStyles } from "./style.build";
 
 document.title = "Fullstacked Style";
 
-createClass(...redClassDef);
-createClass(...buttonClassDef);
+await import("./test.s");
+await import("./test-button.s");
 
 await fs.mkdir("data");
 await fs.writeFile("data/index.css", exportStyles());
@@ -16,4 +14,6 @@ link.rel = "stylesheet";
 link.href = "/data/index.css";
 document.head.append(link);
 
-run();
+globalThis.runtime = true;
+
+await import("./test")
