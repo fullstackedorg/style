@@ -7,6 +7,7 @@ export const redClass = () =>
         fontFamily: "sans-serif",
         padding: 5,
         width: 200,
+
         "&:hover": {
             backgroundColor: "blue",
         },
@@ -14,6 +15,9 @@ export const redClass = () =>
             textDecoration: "underline",
             "&:hover": {
                 fontWeight: "bold",
+            },
+            "@media(max-width: 400px)": {
+                backgroundColor: "purple",
             },
         },
     });

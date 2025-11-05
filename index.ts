@@ -7,7 +7,9 @@ await import("./test.s");
 await import("./test-button.s");
 
 await fs.mkdir("data");
-await fs.writeFile("data/index.css", exportStyles());
+const style = exportStyles();
+console.log(style);
+await fs.writeFile("data/index.css", style);
 
 const link = document.createElement("link");
 link.rel = "stylesheet";
@@ -16,4 +18,4 @@ document.head.append(link);
 
 globalThis.runtime = true;
 
-await import("./test")
+await import("./test");

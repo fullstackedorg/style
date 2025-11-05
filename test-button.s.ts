@@ -26,6 +26,7 @@ export const buttonClass = () =>
         fontWeight: "bold",
         border: 0,
         cursor: "pointer",
+        flex: "1",
         "&:active": {
             backgroundColor: colors.primary.darken,
         },
