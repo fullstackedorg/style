@@ -6,6 +6,7 @@ import {
 
 type StyleItem = {
     cssString?: string;
+    order: number;
     children: StyleTree;
 };
 
@@ -14,6 +15,7 @@ type StyleTree = {
 };
 
 const styles: StyleTree = {};
+let order = 0;
 
 function getOrCreateParentFromPath(path: string[], parent = styles): StyleTree {
     if (path.length === 0) {
@@ -24,6 +26,7 @@ function getOrCreateParentFromPath(path: string[], parent = styles): StyleTree {
     if (!parent[child]) {
         parent[child] = {
             children: {},
+            order: order++,
         };
     }
 
@@ -33,6 +36,7 @@ function getOrCreateParentFromPath(path: string[], parent = styles): StyleTree {
 function createStyle(cssProperties: CSSProperties, path: string[]): StyleItem {
     const styleItem = {
         cssString: "",
+        order: order++,
         children: {},
     };
 
@@ -90,6 +94,7 @@ function constructClassName(path: string[]) {
 
 function generateStyleRecusively(path: string[] = [], parent = styles) {
     return Object.entries(parent)
+        .sort(([_, itemA], [__, itemB]) => itemA.order - itemB.order)
         .map(([tag, styleItem]) => {
             let css = "";
 
